@@ -2,14 +2,16 @@ using UnityEngine;
 
 public class Run : MonoBehaviour
 {
-    [SerializeField] 
+    [SerializeField]
     private GameConfig _gameConfig;
+
+    [SerializeField] 
+    private GameObject _locationView;
 
     private Location _location;
 
     private void Start()
     {
-        _location = new Location(_gameConfig);
-        _location.SpawnAnimal();
+        _location = new Location(_locationView, _gameConfig);
     }
 }

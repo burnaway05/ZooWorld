@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameConfig: {fileID: 11400000, guid: 3e53967de38458d4b87d0d3b55e6a971, type: 2}
+  _locationView: {fileID: 247088052}
 --- !u!4 &222679739
 Transform:
   m_ObjectHideFlags: 0
@@ -167,6 +168,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &247088052 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6054810769484647396, guid: e951c023d59c5584a91f911443f59f3e, type: 3}
+  m_PrefabInstance: {fileID: 1575463893}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

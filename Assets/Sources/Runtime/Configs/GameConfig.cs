@@ -4,5 +4,5 @@ using UnityEngine;
 public class GameConfig : ScriptableObject
 {
     public AnimalConfig[] AnimalsConfig;
-
+    public int SpawnAnimalInterval = 2;
 }
