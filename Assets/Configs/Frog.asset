@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05c818c05968f4f4385afa6ad08a98bb, type: 3}
   m_Name: Frog
   m_EditorClassIdentifier: 
+  Name: Frog
   View:
     m_AssetGUID: ab2576b2d5543b04498a992b3d7fea44
     m_SubObjectName: 

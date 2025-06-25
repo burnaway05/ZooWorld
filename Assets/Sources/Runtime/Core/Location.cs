@@ -1,65 +1,51 @@
 using System.Collections.Generic;
-using Assets.Sources.Runtime.Core;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 
-public class Location
+namespace Assets.Sources.Runtime.Core
 {
-    private GameObject _locationView;
-    private GameConfig _gameConfig;
-
-    private List<Animal> _animals;
-    private List<GameObject> _animalViews;
-    private Rect _spawnArea;
-
-    public Location(GameObject locationView, GameConfig gameConfig)
+    internal class Location
     {
-        _locationView = locationView;
-        _gameConfig = gameConfig;
-        _animals = new List<Animal>();
-        _animalViews = new List<GameObject>();
-        CreateSpawnArea();
-        SpawnAnimalsLoop();
-    }
+        private GameObject _locationView;
+        private GameConfig _gameConfig;
+        private AssetService _assetService;
 
-    private void CreateSpawnArea()
-    {
-        _spawnArea = new Rect(_locationView.transform.localPosition, _locationView.transform.localScale);
-    }
+        private List<Animal> _animals;
+        private Rect _spawnArea;
 
-    private async void SpawnAnimalsLoop()
-    {
-        foreach (var animalConfig in _gameConfig.AnimalsConfig)
+        public Location(GameObject locationView, GameConfig gameConfig, AssetService assetService)
         {
-            var animalPrefab = await LoadFromReference(animalConfig.View);
-            _animalViews.Add(animalPrefab);
+            _locationView = locationView;
+            _gameConfig = gameConfig;
+            _assetService = assetService;
+            _animals = new List<Animal>();
+            InitializeSpawnArea();
+            PeriodicSpawnAnimals().Forget();
         }
 
-        while (true)
+        private void InitializeSpawnArea()
+        {
+            _spawnArea = new Rect(_locationView.transform.localPosition, _locationView.transform.localScale);
+        }
+
+        private async UniTaskVoid PeriodicSpawnAnimals()
+        {
+            while(true)
+            {
+                var animalView = _assetService.Get(_gameConfig.AnimalsConfig[Random.Range(0, _gameConfig.AnimalsConfig.Length)].Name);
+                animalView.transform.localPosition = GetRandomPoint();
+                _animals.Add(new Frog(animalView));
+                await UniTask.Delay(System.TimeSpan.FromSeconds(_gameConfig.SpawnAnimalInterval));
+            }
+        }
+
+        private Vector3 GetRandomPoint()
         {
             float x = Random.Range(-_spawnArea.width / 2, _spawnArea.width / 2);
             float z = Random.Range(-_spawnArea.height / 2, _spawnArea.height / 2);
             float y = 0.5f;
-            var position = new Vector3(x, y, z);
 
-            Object.Instantiate(_animalViews[Random.Range(0, _animalViews.Count - 1)], position, Quaternion.identity);
-            await UniTask.Delay(System.TimeSpan.FromSeconds(_gameConfig.SpawnAnimalInterval));
+            return new Vector3(x, y, z);
         }
-    }
-    
-    private async UniTask<GameObject> LoadFromReference(AssetReference reference)
-    {
-        var handle = reference.LoadAssetAsync<GameObject>();
-        await handle.ToUniTask();
-
-        if (handle.Status == AsyncOperationStatus.Succeeded)
-        {
-            return handle.Result;
-        }
-
-        Debug.LogError("Resource has not been loaded");
-        return null;
     }
 }

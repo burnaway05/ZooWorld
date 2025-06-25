@@ -1,17 +1,25 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class Run : MonoBehaviour
+namespace Assets.Sources.Runtime.Core
 {
-    [SerializeField]
-    private GameConfig _gameConfig;
-
-    [SerializeField] 
-    private GameObject _locationView;
-
-    private Location _location;
-
-    private void Start()
+    public class Run : MonoBehaviour
     {
-        _location = new Location(_locationView, _gameConfig);
+        [SerializeField]
+        private GameConfig _gameConfig;
+
+        [SerializeField]
+        private GameObject _locationView;
+
+        private AssetService _assetService;
+        private Location _location;
+
+        private async void Start()
+        {
+            _assetService = new AssetService(_gameConfig);
+            await _assetService.WarmUpPrefabs();
+
+            _location = new Location(_locationView, _gameConfig, _assetService);
+        }
     }
 }
