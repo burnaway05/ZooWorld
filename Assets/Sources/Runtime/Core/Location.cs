@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Assets.Sources.Runtime.Services;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace Assets.Sources.Runtime.Core
     {
         private GameObject _locationView;
         private GameConfig _gameConfig;
-        private AssetService _assetService;
+        private EnemyFactory _enemyFactory;
 
         private List<Animal> _animals;
         private Rect _spawnArea;
@@ -17,7 +18,7 @@ namespace Assets.Sources.Runtime.Core
         {
             _locationView = locationView;
             _gameConfig = gameConfig;
-            _assetService = assetService;
+            _enemyFactory = new EnemyFactory(assetService);
             _animals = new List<Animal>();
             InitializeSpawnArea();
             PeriodicSpawnAnimals().Forget();
@@ -32,14 +33,22 @@ namespace Assets.Sources.Runtime.Core
         {
             while(true)
             {
-                var animalView = _assetService.Get(_gameConfig.AnimalsConfig[Random.Range(0, _gameConfig.AnimalsConfig.Length)].Name);
-                animalView.transform.localPosition = GetRandomPoint();
-                _animals.Add(new Frog(animalView));
+                _animals.Add(_enemyFactory.Create(_gameConfig.AnimalsConfig[GetRandomIndexAnimal()].Name, GetRandomPosition(), GetRandomRotation()));
                 await UniTask.Delay(System.TimeSpan.FromSeconds(_gameConfig.SpawnAnimalInterval));
             }
         }
 
-        private Vector3 GetRandomPoint()
+        private int GetRandomIndexAnimal()
+        {
+            return Random.Range(0, _gameConfig.AnimalsConfig.Length);
+        }
+
+        private Quaternion GetRandomRotation()
+        {
+            return Quaternion.AngleAxis(Random.Range(0f, 360f), Vector3.up);
+        }
+
+        private Vector3 GetRandomPosition()
         {
             float x = Random.Range(-_spawnArea.width / 2, _spawnArea.width / 2);
             float z = Random.Range(-_spawnArea.height / 2, _spawnArea.height / 2);

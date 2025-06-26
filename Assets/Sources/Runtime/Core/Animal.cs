@@ -4,6 +4,8 @@ namespace Assets.Sources.Runtime.Core
 {
     internal abstract class Animal
     {
-        public abstract void OnCollisionEnter(Collision other);
+        public virtual void FixedUpdate() { }
+
+        public virtual void OnCollisionEnter(Collision other) { }
     }
 }

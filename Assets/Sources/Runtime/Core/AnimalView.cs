@@ -11,7 +11,12 @@ namespace Assets.Sources.Runtime.Core
             _animal = animal;
         }
 
-        void OnCollisionEnter(Collision other)
+        private void FixedUpdate()
+        {
+            _animal.FixedUpdate();
+        }
+
+        private void OnCollisionEnter(Collision other)
         {
             _animal.OnCollisionEnter(other);
         }
