@@ -13,9 +13,10 @@ public class GameLifetimeScope : LifetimeScope
     protected override void Configure(IContainerBuilder builder)
     {
         builder.RegisterInstance(_gameDefinition);
-        //builder.RegisterInstance(_location);
         builder.Register<Location>(Lifetime.Singleton);
+        builder.Register<ObjectPool>(Lifetime.Singleton);
         builder.Register<AnimalSpawner>(Lifetime.Singleton);
+        builder.Register<AnimalFactory>(Lifetime.Singleton);
 
         builder.RegisterEntryPoint<Game>();
     }

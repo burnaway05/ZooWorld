@@ -5,5 +5,5 @@ using UnityEngine.AddressableAssets;
 public class AnimalDefinition : ScriptableObject
 {
     public string Name;
-    public AssetReference View;
+    public AssetReference Prefab;
 }

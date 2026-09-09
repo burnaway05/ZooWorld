@@ -1,22 +1,35 @@
-using Cysharp.Threading.Tasks;
 using System.Threading;
 using VContainer.Unity;
 
-public class Game : IStartable
+public class Game : IStartable, ITickable
 {
     private AnimalSpawner _spawner;
     private Location _location;
-    private CancellationTokenSource cancellationTokenSource;
+    private CancellationTokenSource _cancellationTokenSource;
 
     public Game(AnimalSpawner spawner, Location location)
     {
         _spawner = spawner;
         _location = location;
-        cancellationTokenSource = new CancellationTokenSource();
+        _cancellationTokenSource = new CancellationTokenSource();
     }
 
     public void Start()
     {
-        _spawner.SpawnAsync(cancellationTokenSource.Token).Forget();
+        SpawnAnimals();
+    }
+
+    public void Tick()
+    {
+        _location.Tick();
+    }
+
+    private async void SpawnAnimals()
+    {
+        while (!_cancellationTokenSource.Token.IsCancellationRequested)
+        {
+            var animal = await _spawner.SpawnAsync(_cancellationTokenSource.Token);
+            _location.AddAnimal(animal);
+        }
     }
 }

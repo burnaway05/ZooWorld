@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Snake
   m_EditorClassIdentifier: 
   Name: Snake
-  View:
+  Prefab:
     m_AssetGUID: c44127fadeb43784ebf434dc7199f39c
     m_SubObjectName: 
     m_SubObjectType: 
+    m_SubObjectGUID: 
     m_EditorAssetChanged: 0
