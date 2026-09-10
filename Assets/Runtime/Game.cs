@@ -28,7 +28,7 @@ public class Game : IStartable, ITickable
     {
         while (!_cancellationTokenSource.Token.IsCancellationRequested)
         {
-            var animal = await _spawner.SpawnAsync(_cancellationTokenSource.Token);
+            var animal = await _spawner.SpawnAsync(_location.GetSpawnPosition(), _location.GetSpawnRotatin(), _cancellationTokenSource.Token);
             _location.AddAnimal(animal);
         }
     }

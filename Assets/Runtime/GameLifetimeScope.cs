@@ -8,11 +8,13 @@ public class GameLifetimeScope : LifetimeScope
     private GameDefinition _gameDefinition;
 
     [SerializeField] 
-    private Location _location;
+    private LocationView _locationView;
 
     protected override void Configure(IContainerBuilder builder)
     {
         builder.RegisterInstance(_gameDefinition);
+        builder.RegisterInstance(_locationView);
+
         builder.Register<Location>(Lifetime.Singleton);
         builder.Register<ObjectPool>(Lifetime.Singleton);
         builder.Register<AnimalSpawner>(Lifetime.Singleton);
