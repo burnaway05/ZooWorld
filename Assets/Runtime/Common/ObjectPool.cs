@@ -55,7 +55,7 @@ public class ObjectPool
             _pool.Add(reference, new Queue<GameObject>());
         }
 
-        var gameObject = await Addressables.InstantiateAsync(reference);
+        var gameObject = await Addressables.InstantiateAsync(reference, null, false, true);
 
         return gameObject;
     }

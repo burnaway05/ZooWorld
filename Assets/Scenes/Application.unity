@@ -482,6 +482,7 @@ MonoBehaviour:
   autoRun: 1
   autoInjectGameObjects: []
   _gameDefinition: {fileID: 11400000, guid: 3e53967de38458d4b87d0d3b55e6a971, type: 2}
+  _locationView: {fileID: 1575302851}
 --- !u!4 &771557994
 Transform:
   m_ObjectHideFlags: 0
@@ -546,6 +547,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1575302851 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3930472133879984036, guid: e951c023d59c5584a91f911443f59f3e, type: 3}
+  m_PrefabInstance: {fileID: 609432135}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5632b95b81af26149a543a48b8580ae0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocationView
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
