@@ -46,4 +46,18 @@ public class Location
             }
         }
     }
+
+    public void FixedTick()
+    {
+        var deltaTime = Time.fixedDeltaTime;
+        foreach (var animal in _animals)
+        {
+            if(animal.IsNeedToTurnAround())
+            {
+                animal.TurnAround();
+            }
+
+            animal.FixedTick(deltaTime);
+        }
+    }
 }

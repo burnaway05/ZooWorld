@@ -153,3 +153,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afe901167f624844693afaa4137fcb2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnimalView
+  _rigidbody: {fileID: 5148121256838794949}

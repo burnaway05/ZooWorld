@@ -19,3 +19,4 @@ MonoBehaviour:
     m_SubObjectType: 
     m_SubObjectGUID: 
     m_EditorAssetChanged: 0
+  Movement: {fileID: 11400000, guid: 7364a6eb8fd084547b7baae3d5639e6b, type: 2}

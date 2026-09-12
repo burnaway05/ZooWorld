@@ -1,7 +1,7 @@
 using System.Threading;
 using VContainer.Unity;
 
-public class Game : IStartable, ITickable
+public class Game : IStartable, ITickable, IFixedTickable
 {
     private AnimalSpawner _spawner;
     private Location _location;
@@ -31,5 +31,9 @@ public class Game : IStartable, ITickable
             var animal = await _spawner.SpawnAsync(_location.GetSpawnPosition(), _location.GetSpawnRotatin(), _cancellationTokenSource.Token);
             _location.AddAnimal(animal);
         }
+    }
+    public void FixedTick()
+    {
+        _location.FixedTick();
     }
 }
