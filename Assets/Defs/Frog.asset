@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Frog
   m_EditorClassIdentifier: 
   Name: Frog
+  Type: 0
   Prefab:
     m_AssetGUID: ab2576b2d5543b04498a992b3d7fea44
     m_SubObjectName: 

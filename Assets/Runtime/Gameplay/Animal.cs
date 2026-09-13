@@ -7,6 +7,7 @@ public class Animal
     public AnimalDefinition Definition { get; private set; }
     public IAnimalBody View { get; private set; }
     public bool IsAlive { get; private set; }
+    public AnimalType Type => Definition.Type;
 
     public Animal(AnimalDefinition definition, IAnimalBody view)
     {
@@ -14,7 +15,6 @@ public class Animal
         View = view;
         IsAlive = true;
 
-        View.Rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
         _movement = Definition.CreateMovement(View);
     }
 

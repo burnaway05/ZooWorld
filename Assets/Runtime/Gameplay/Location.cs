@@ -1,17 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 
-public class Location
+public class Location : IAnimalCollisionHandler
 {
     private List<Animal> _animals;
-    private AnimalFactory _factory;
     private LocationView _view;
+    private GameDefinition _gameDefinition;
+    private AnimalFactory _factory;
 
-    public Location(LocationView view, AnimalFactory factory)
+    public Location(LocationView view, GameDefinition gameDefinition, AnimalFactory factory)
     {
         _animals = new List<Animal>();
-        _factory = factory;
         _view = view;
+        _gameDefinition = gameDefinition;
+        _factory = factory;
     }
 
     public void AddAnimal(Animal animal)
@@ -19,6 +23,13 @@ public class Location
         _animals.Add(animal);
     }
 
+    private AnimalDefinition GetDefiniton()
+    {
+        var animals = _gameDefinition.Animals;
+        var randomAnimal = animals[Random.Range(0, animals.Length)];
+
+        return randomAnimal;
+    }
 
     public Vector3 GetSpawnPosition()
     {
@@ -59,5 +70,81 @@ public class Location
 
             animal.FixedTick(deltaTime);
         }
+    }
+
+    public async UniTask<Animal> SpawnAsync(Vector3 position, Quaternion rotation, CancellationToken cancellationToken)
+    {
+        var delay = Random.Range(_gameDefinition.MinSpawnnterval, _gameDefinition.MaxSpawnnterval);
+
+        await UniTask.Delay(System.TimeSpan.FromSeconds(delay), cancellationToken: cancellationToken);
+
+        var definition = GetDefiniton();
+        var animal = await _factory.CreateAsync(definition, position, rotation, this, cancellationToken);
+
+        return animal;
+    }
+
+    public void HandleCollision(IAnimalBody first, IAnimalBody second)
+    {
+        Animal firstAnimal = null;
+        Animal secondAnimal = null;
+        foreach (var animal in _animals)
+        {
+            if (animal.View == first)
+            {
+                firstAnimal = animal;
+            }
+
+            if (animal.View == second)
+            {
+                secondAnimal = animal;
+            }
+        }
+
+        ResolveInteraction(firstAnimal, secondAnimal);
+    }
+
+    private void ResolveInteraction(Animal first, Animal second)
+    {
+        if(first == null || second == null)
+        {
+            return;
+        }
+
+        if (!first.IsAlive || !second.IsAlive)
+        {
+            return;
+        }
+
+        if (first.Definition.Type == AnimalType.Prey && second.Definition.Type == AnimalType.Prey)
+        {
+            var pushImpulse = 2;
+            var direction = (first.View.Position - second.View.Position).normalized;
+
+            first.View.Rigidbody.AddForce(direction * pushImpulse, ForceMode.VelocityChange);
+
+            second.View.Rigidbody.AddForce(-direction * pushImpulse, ForceMode.VelocityChange);
+        }
+
+        if (first.Definition.Type == AnimalType.Prey && second.Definition.Type == AnimalType.Predator)
+        {
+            Kill(first);
+        }
+
+        if (first.Definition.Type == AnimalType.Predator && second.Definition.Type == AnimalType.Prey)
+        {
+            Kill(second);
+        }
+
+        if (first.Definition.Type == AnimalType.Predator && second.Definition.Type == AnimalType.Predator)
+        {
+            Kill(first);
+        }
+    }
+
+    private void Kill(Animal animal)
+    {
+        _factory.Release(animal);
+        _animals.Remove(animal);
     }
 }

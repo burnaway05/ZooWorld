@@ -3,13 +3,11 @@ using VContainer.Unity;
 
 public class Game : IStartable, ITickable, IFixedTickable
 {
-    private AnimalSpawner _spawner;
     private Location _location;
     private CancellationTokenSource _cancellationTokenSource;
 
-    public Game(AnimalSpawner spawner, Location location)
+    public Game(Location location)
     {
-        _spawner = spawner;
         _location = location;
         _cancellationTokenSource = new CancellationTokenSource();
     }
@@ -28,7 +26,7 @@ public class Game : IStartable, ITickable, IFixedTickable
     {
         while (!_cancellationTokenSource.Token.IsCancellationRequested)
         {
-            var animal = await _spawner.SpawnAsync(_location.GetSpawnPosition(), _location.GetSpawnRotatin(), _cancellationTokenSource.Token);
+            var animal = await _location.SpawnAsync(_location.GetSpawnPosition(), _location.GetSpawnRotatin(), _cancellationTokenSource.Token);
             _location.AddAnimal(animal);
         }
     }

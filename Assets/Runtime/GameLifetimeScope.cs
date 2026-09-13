@@ -16,8 +16,8 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterInstance(_locationView);
 
         builder.Register<Location>(Lifetime.Singleton);
+        builder.Register<AnimalInteractionSystem>(Lifetime.Singleton);
         builder.Register<ObjectPool>(Lifetime.Singleton);
-        builder.Register<AnimalSpawner>(Lifetime.Singleton);
         builder.Register<AnimalFactory>(Lifetime.Singleton);
 
         builder.RegisterEntryPoint<Game>();

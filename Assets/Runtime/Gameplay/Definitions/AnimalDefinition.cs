@@ -5,6 +5,7 @@ using UnityEngine.AddressableAssets;
 public class AnimalDefinition : ScriptableObject
 {
     public string Name;
+    public AnimalType Type;
     public AssetReference Prefab;
     public AnimalMovementDefinition Movement;
 
@@ -12,4 +13,10 @@ public class AnimalDefinition : ScriptableObject
     {
         return Movement.Create(body);
     }
+}
+
+public enum AnimalType
+{
+    Prey,
+    Predator
 }
