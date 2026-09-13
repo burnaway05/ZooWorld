@@ -1,6 +1,10 @@
+using Gameplay.Animals;
 using UnityEngine;
 
-public abstract class AnimalMovementDefinition : ScriptableObject
+namespace Gameplay.Definitions
 {
-    public abstract IAnimalMovement Create(IAnimalBody body);
+    public abstract class AnimalMovementDefinition : ScriptableObject
+    {
+        public abstract IAnimalMovement Create(IAnimalBody body);
+    }
 }

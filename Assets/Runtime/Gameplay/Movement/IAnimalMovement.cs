@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public interface IAnimalMovement
+namespace Gameplay.Animals
 {
-    void FixedTick(float deltaTime);
+    public interface IAnimalMovement
+    {
+        void FixedTick(float deltaTime);
+    }
 }

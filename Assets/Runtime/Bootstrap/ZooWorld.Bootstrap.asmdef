@@ -1,0 +1,19 @@
+{
+    "name": "Bootstrap",
+    "rootNamespace": "",
+    "references": [
+        "GUID:6fcee301ce369104692871849d34aabd",
+        "GUID:134366a4093ee3d41b4930a4a3a1bc05",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:4977237519623134390975323ef4214e"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

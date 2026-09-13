@@ -1,39 +1,42 @@
 using UnityEngine;
 
-public class JumpMovement : IAnimalMovement
+namespace Gameplay.Animals
 {
-    private readonly float _jumpInterval;
-    private readonly float _jumpForce;
-    private readonly float _forwardForce;
-    private readonly IAnimalBody _body;
-
-    private float _timeToJump;
-
-    public JumpMovement(float jumpInterval, float jumpForce, float forwardForce, IAnimalBody body)
+    public class JumpMovement : IAnimalMovement
     {
-        _jumpInterval = jumpInterval;
-        _jumpForce = jumpForce;
-        _forwardForce = forwardForce;
-        _body = body;
-    }
+        private readonly float _jumpInterval;
+        private readonly float _jumpForce;
+        private readonly float _forwardForce;
+        private readonly IAnimalBody _body;
 
-    public void FixedTick(float deltaTime)
-    {
-        _timeToJump -= deltaTime;
+        private float _timeToJump;
 
-        if (_timeToJump > 0f)
+        public JumpMovement(float jumpInterval, float jumpForce, float forwardForce, IAnimalBody body)
         {
-            return;
+            _jumpInterval = jumpInterval;
+            _jumpForce = jumpForce;
+            _forwardForce = forwardForce;
+            _body = body;
         }
 
-        Jump();
+        public void FixedTick(float deltaTime)
+        {
+            _timeToJump -= deltaTime;
 
-        _timeToJump = _jumpInterval;
-    }
+            if (_timeToJump > 0f)
+            {
+                return;
+            }
 
-    private void Jump()
-    {
-        Vector3 jumpVector = Vector3.up * _jumpForce + _body.Forward * _forwardForce;
-        _body.Rigidbody.AddForce(jumpVector, ForceMode.Impulse);
+            Jump();
+
+            _timeToJump = _jumpInterval;
+        }
+
+        private void Jump()
+        {
+            Vector3 jumpVector = Vector3.up * _jumpForce + _body.Forward * _forwardForce;
+            _body.Rigidbody.AddForce(jumpVector, ForceMode.Impulse);
+        }
     }
 }

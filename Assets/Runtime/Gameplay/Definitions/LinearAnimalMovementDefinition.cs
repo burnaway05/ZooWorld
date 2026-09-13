@@ -1,13 +1,17 @@
+using Gameplay.Animals;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "LinearAnimalMovementDefinition", menuName = "Definitions/LinearDefinition")]
-public class LinearAnimalMovementDefinition : AnimalMovementDefinition
+namespace Gameplay.Definitions
 {
-    [SerializeField]
-    private float _speed = 1f;
-
-    public override IAnimalMovement Create(IAnimalBody body)
+    [CreateAssetMenu(fileName = "LinearAnimalMovementDefinition", menuName = "Definitions/LinearDefinition")]
+    public class LinearAnimalMovementDefinition : AnimalMovementDefinition
     {
-        return new LinearMovement(_speed, body);
+        [SerializeField]
+        private float _speed = 1f;
+
+        public override IAnimalMovement Create(IAnimalBody body)
+        {
+            return new LinearMovement(_speed, body);
+        }
     }
 }

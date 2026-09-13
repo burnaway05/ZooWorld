@@ -1,14 +1,17 @@
 using UnityEngine;
 
-public class AnimalInteractionSystem : IAnimalCollisionHandler
+namespace Gameplay.Animals
 {
-    public AnimalInteractionSystem()
+    public class AnimalInteractionSystem : IAnimalCollisionHandler
     {
+        public AnimalInteractionSystem()
+        {
 
-    }
+        }
 
-    public void HandleCollision(IAnimalBody first, IAnimalBody second)
-    {
-        throw new System.NotImplementedException();
+        public void HandleCollision(IAnimalBody first, IAnimalBody second)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
