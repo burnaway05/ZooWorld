@@ -137,18 +137,21 @@ namespace Gameplay.Game
             {
                 _gameStatistics.RegisterPreyDeath();
                 Kill(first);
+                second.Eat();
             }
 
             if (first.Definition.Type == AnimalType.Predator && second.Definition.Type == AnimalType.Prey)
             {
                 _gameStatistics.RegisterPreyDeath();
                 Kill(second);
+                first.Eat();
             }
 
             if (first.Definition.Type == AnimalType.Predator && second.Definition.Type == AnimalType.Predator)
             {
                 _gameStatistics.RegisterPredatorDeath();
                 Kill(first);
+                second.Eat();
             }
         }
 

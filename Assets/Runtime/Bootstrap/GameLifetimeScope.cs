@@ -25,7 +25,6 @@ public class GameLifetimeScope : LifetimeScope
 
         builder.Register<GameStatistics>(Lifetime.Singleton);
         builder.Register<Location>(Lifetime.Singleton);
-        builder.Register<AnimalInteractionSystem>(Lifetime.Singleton);
         builder.Register<ObjectPool>(Lifetime.Singleton);
         builder.Register<AnimalFactory>(Lifetime.Singleton);
 

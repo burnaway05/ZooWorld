@@ -1,4 +1,5 @@
 using Gameplay.Definitions;
+using System;
 using UnityEngine;
 
 namespace Gameplay.Animals
@@ -11,6 +12,8 @@ namespace Gameplay.Animals
         public IAnimalBody View { get; private set; }
         public bool IsAlive { get; private set; }
         public AnimalType Type => Definition.Type;
+
+        public event Action Ate;
 
         public Animal(AnimalDefinition definition, IAnimalBody view)
         {
@@ -56,7 +59,12 @@ namespace Gameplay.Animals
             Vector3 dirToOrigin = -View.Position.normalized;
             var rotation = Quaternion.LookRotation(dirToOrigin).eulerAngles;
 
-            View.Rigidbody.MoveRotation(Quaternion.Euler(new Vector3(rotation.x, rotation.y + Random.Range(-30, 30), rotation.z)));
+            View.Rigidbody.MoveRotation(Quaternion.Euler(new Vector3(rotation.x, rotation.y + UnityEngine.Random.Range(-30, 30), rotation.z)));
+        }
+
+        public void Eat()
+        {
+            Ate?.Invoke();
         }
     }
 }

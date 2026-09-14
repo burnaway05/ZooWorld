@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using System;
 using UnityEngine;
 
 namespace Gameplay.Animals
@@ -19,7 +21,13 @@ namespace Gameplay.Animals
         [SerializeField]
         private Rigidbody _rigidbody;
 
+        [SerializeField]
+        private GameObject _tastyLabel;
+        
+        private float _tastyOffset = 1.2f;
+
         private IAnimalCollisionHandler _collisionHandler;
+        private Animal _animal;
 
         public Rigidbody Rigidbody => _rigidbody;
 
@@ -27,14 +35,27 @@ namespace Gameplay.Animals
 
         public Vector3 Forward => transform.forward;
 
-        public void Bind(IAnimalCollisionHandler collisionHandler)
+        public void Bind(Animal animal, IAnimalCollisionHandler collisionHandler)
         {
+            _animal = animal;
+            _animal.Ate += OnAte;
             _collisionHandler = collisionHandler;
+
+            if (_tastyLabel != null)
+            {
+                _tastyLabel.SetActive(false);
+            }
         }
 
         public void Unbind()
         {
+            _animal = null;
             _collisionHandler = null;
+
+            if (_tastyLabel != null)
+            {
+                _tastyLabel.SetActive(false);
+            }
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -43,6 +64,32 @@ namespace Gameplay.Animals
             {
                 _collisionHandler?.HandleCollision(this, other);
             }
+        }
+
+        private void LateUpdate()
+        {
+            if(_tastyLabel != null)
+            {
+                Vector3 screenDown = -Camera.main.transform.up;
+                screenDown = Vector3.ProjectOnPlane(screenDown, Vector3.up).normalized;
+
+                _tastyLabel.transform.position = transform.position + screenDown * _tastyOffset;
+                _tastyLabel.transform.rotation = Camera.main.transform.rotation;
+            }
+        }
+
+        private void OnAte()
+        {
+            ShowTastyAsync().Forget();
+        }
+
+        private async UniTask ShowTastyAsync()
+        {
+            _tastyLabel?.SetActive(true);
+
+            await UniTask.Delay(TimeSpan.FromSeconds(1));
+
+            _tastyLabel?.SetActive(false);
         }
     }
 }

@@ -24,8 +24,8 @@ namespace Gameplay.Animals
             gameObject.transform.localRotation = rotation;
 
             var view = gameObject.GetComponent<AnimalView>();
-            view.Bind(collisionHandler);
             var animal = new Animal(definition, view);
+            view.Bind(animal, collisionHandler);
 
             _instances.Add(animal, view);
             return animal;
