@@ -5,6 +5,7 @@ using UI;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
+using ZooWorld.Pooling;
 
 public class GameLifetimeScope : LifetimeScope
 {

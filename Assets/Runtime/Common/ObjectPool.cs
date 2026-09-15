@@ -1,62 +1,114 @@
 using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-public class ObjectPool
+namespace ZooWorld.Pooling
 {
-    private Dictionary<AssetReference, Queue<GameObject>> _pool;
-
-    public ObjectPool()
+    public class ObjectPool : IDisposable
     {
-        _pool = new Dictionary<AssetReference, Queue<GameObject>>();
-    }
+        private Transform _root; 
+        private readonly HashSet<GameObject> _instances;
+        private Dictionary<AssetReference, Queue<GameObject>> _pool;
 
-    public async UniTask<GameObject> GetAsync(AssetReference reference, CancellationToken cancellationToken)
-    {
-        if(!TryGetFromPool(reference, out var instance))
+        public ObjectPool()
         {
-            instance = await CreateAsync(reference, cancellationToken);
+            _instances = new HashSet<GameObject>();
+            _pool = new Dictionary<AssetReference, Queue<GameObject>>();
         }
 
-        instance.gameObject.SetActive(true);
-
-        return instance;
-    }
-
-    public void Return(AssetReference reference, GameObject instance)
-    {
-        instance.gameObject.SetActive(false);
-        _pool[reference].Enqueue(instance);
-    }
-
-    private bool TryGetFromPool(AssetReference reference, out GameObject instance)
-    {
-        instance = null;
-        if (!_pool.ContainsKey(reference))
+        private Transform GetRoot()
         {
-            return false;
+            if (_root != null)
+            {
+                return _root;
+            }
+
+            var rootObject = new GameObject("ObjectPool");
+            _root = rootObject.transform;
+
+            return _root;
         }
 
-        if(_pool[reference].Count <= 0)
+        public async UniTask<GameObject> GetAsync(AssetReference reference, CancellationToken cancellationToken)
         {
-            return false;
+            var pool = GetOrAddPool(reference);
+            GameObject instance = null;
+            if (pool.Count > 0)
+            {
+                instance = _pool[reference].Dequeue();
+            }
+            else
+            {
+                instance = await CreateAsync(reference, cancellationToken);
+            }
+            instance.gameObject.SetActive(true);
+
+            return instance;
         }
 
-        instance = _pool[reference].Dequeue();
-        return true;
-    }
-
-    private async UniTask<GameObject> CreateAsync(AssetReference reference, CancellationToken cancellationToken)
-    {
-        if(!_pool.ContainsKey(reference))
+        public void Return(AssetReference reference, GameObject instance)
         {
-            _pool.Add(reference, new Queue<GameObject>());
+            instance.gameObject.SetActive(false);
+            _pool[reference].Enqueue(instance);
         }
 
-        var gameObject = await Addressables.InstantiateAsync(reference, null, false, true);
+        private async UniTask<GameObject> CreateAsync(AssetReference reference, CancellationToken cancellationToken)
+        {
+            var gameObject = await Addressables.InstantiateAsync(reference, GetRoot(), false, true);
+            _instances.Add(gameObject);
 
-        return gameObject;
+            if (cancellationToken.IsCancellationRequested)
+            {
+                Addressables.ReleaseInstance(gameObject);
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+
+            return gameObject;
+        }
+
+        public async UniTask WarmUpAsync(AssetReference reference, int count, CancellationToken cancellationToken)
+        {
+            var pool = GetOrAddPool(reference);
+
+            while (pool.Count < count)
+            {
+                var instance = await CreateAsync(reference, cancellationToken);
+
+                instance.SetActive(false);
+                pool.Enqueue(instance);
+            }
+        }
+
+        private Queue<GameObject> GetOrAddPool(AssetReference reference)
+        {
+            if (!_pool.ContainsKey(reference))
+            {
+                _pool.Add(reference, new Queue<GameObject>());
+            }
+
+            return _pool[reference];
+        }
+
+        public void Dispose()
+        {
+            foreach (var instance in _instances)
+            {
+                if (instance != null)
+                {
+                    Addressables.ReleaseInstance(instance);
+                }
+            }
+
+            _instances.Clear();
+
+            if (_root != null)
+            {
+                UnityEngine.Object.Destroy(_root.gameObject);
+                _root = null;
+            }
+        }
     }
 }

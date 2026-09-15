@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using Gameplay.Definitions;
 using Gameplay.Animals;
+using VContainer.Unity;
 
 namespace Gameplay.Game
 {

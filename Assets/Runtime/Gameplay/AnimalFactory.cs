@@ -3,6 +3,7 @@ using Gameplay.Definitions;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using ZooWorld.Pooling;
 
 namespace Gameplay.Animals
 {
