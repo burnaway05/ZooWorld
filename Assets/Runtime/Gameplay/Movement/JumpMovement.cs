@@ -36,7 +36,7 @@ namespace Gameplay.Animals
         private void Jump()
         {
             Vector3 jumpVector = Vector3.up * _jumpForce + _body.Forward * _forwardForce;
-            _body.Rigidbody.AddForce(jumpVector, ForceMode.Impulse);
+            _body.AddForce(jumpVector, ForceMode.Impulse);
         }
     }
 }

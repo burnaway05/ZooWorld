@@ -6,60 +6,41 @@ namespace Gameplay.Animals
 {
     public class Animal
     {
-        private IAnimalMovement _movement;
+        private readonly IAnimalMovement _movement;
 
         public AnimalDefinition Definition { get; private set; }
-        public IAnimalBody View { get; private set; }
+        public IAnimalBody Body { get; private set; }
         public bool IsAlive { get; private set; }
         public AnimalType Type => Definition.Type;
-
+        public Vector3 Forward => Body.Forward;
+        public Vector3 Position => Body.Position;
         public event Action Ate;
 
         public Animal(AnimalDefinition definition, IAnimalBody view)
         {
             Definition = definition;
-            View = view;
+            Body = view;
             IsAlive = true;
 
-            _movement = Definition.CreateMovement(View);
+            _movement = Definition.CreateMovement(Body);
         }
 
         public void FixedTick(float deltaTime)
         {
+            if (!IsAlive)
+            {
+                return;
+            }
+
             _movement.FixedTick(deltaTime);
         }
 
-        public bool IsNeedToTurnAround()
+        public void TurnAround()
         {
-            return IsAnimalOutOfScreen() && !IsAnimalLookInside();
-        }
-
-        private bool IsAnimalOutOfScreen()
-        {
-            Vector3 screenPos = Camera.main.WorldToScreenPoint(View.Position);
-
-            bool visible =
-                screenPos.z > 0 &&
-                screenPos.x >= 0 && screenPos.x <= Screen.width &&
-                screenPos.y >= 0 && screenPos.y <= Screen.height;
-
-            return !visible;
-        }
-
-        private bool IsAnimalLookInside()
-        {
-            Vector3 dirToOrigin = -View.Position.normalized;
-            float dot = Vector3.Dot(View.Forward, dirToOrigin);
-
-            return dot > 0;
-        }
-
-        public virtual void TurnAround()
-        {
-            Vector3 dirToOrigin = -View.Position.normalized;
+            Vector3 dirToOrigin = -Body.Position.normalized;
             var rotation = Quaternion.LookRotation(dirToOrigin).eulerAngles;
 
-            View.Rigidbody.MoveRotation(Quaternion.Euler(new Vector3(rotation.x, rotation.y + UnityEngine.Random.Range(-30, 30), rotation.z)));
+            Body.MoveRotation(Quaternion.Euler(new Vector3(rotation.x, rotation.y + UnityEngine.Random.Range(-30, 30), rotation.z)));
         }
 
         public void Eat()

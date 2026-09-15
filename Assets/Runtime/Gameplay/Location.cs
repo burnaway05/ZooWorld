@@ -71,7 +71,7 @@ namespace Gameplay.Game
             var deltaTime = Time.fixedDeltaTime;
             foreach (var animal in _animals)
             {
-                if (animal.IsNeedToTurnAround())
+                if (IsNeedToTurnAround(animal))
                 {
                     animal.TurnAround();
                 }
@@ -92,18 +92,43 @@ namespace Gameplay.Game
             return animal;
         }
 
+        public bool IsNeedToTurnAround(Animal animal)
+        {
+            return IsAnimalOutOfScreen(animal) && !IsAnimalLookInside(animal);
+        }
+
+        private bool IsAnimalOutOfScreen(Animal animal)
+        {
+            Vector3 screenPos = Camera.main.WorldToScreenPoint(animal.Position);
+
+            bool visible =
+                screenPos.z > 0 &&
+                screenPos.x >= 0 && screenPos.x <= Screen.width &&
+                screenPos.y >= 0 && screenPos.y <= Screen.height;
+
+            return !visible;
+        }
+
+        private bool IsAnimalLookInside(Animal animal)
+        {
+            Vector3 dirToOrigin = -animal.Position.normalized;
+            float dot = Vector3.Dot(animal.Forward, dirToOrigin);
+
+            return dot > 0;
+        }
+
         public void HandleCollision(IAnimalBody first, IAnimalBody second)
         {
             Animal firstAnimal = null;
             Animal secondAnimal = null;
             foreach (var animal in _animals)
             {
-                if (animal.View == first)
+                if (animal.Body == first)
                 {
                     firstAnimal = animal;
                 }
 
-                if (animal.View == second)
+                if (animal.Body == second)
                 {
                     secondAnimal = animal;
                 }
@@ -127,11 +152,11 @@ namespace Gameplay.Game
             if (first.Definition.Type == AnimalType.Prey && second.Definition.Type == AnimalType.Prey)
             {
                 var pushImpulse = 2;
-                var direction = (first.View.Position - second.View.Position).normalized;
+                var direction = (first.Body.Position - second.Body.Position).normalized;
 
-                first.View.Rigidbody.AddForce(direction * pushImpulse, ForceMode.VelocityChange);
+                first.Body.AddForce(direction * pushImpulse, ForceMode.VelocityChange);
 
-                second.View.Rigidbody.AddForce(-direction * pushImpulse, ForceMode.VelocityChange);
+                second.Body.AddForce(-direction * pushImpulse, ForceMode.VelocityChange);
             }
 
             if (first.Definition.Type == AnimalType.Prey && second.Definition.Type == AnimalType.Predator)
