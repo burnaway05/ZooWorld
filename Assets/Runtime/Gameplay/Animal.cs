@@ -47,5 +47,10 @@ namespace Gameplay.Animals
         {
             Ate?.Invoke();
         }
+
+        public void Kill()
+        {
+            IsAlive = false;
+        }
     }
 }

@@ -41,12 +41,30 @@ namespace Gameplay.Game
 
         public Vector3 GetSpawnPosition()
         {
-            var position = new Vector3(
-                   Random.Range(_view.Bounds.min.x, _view.Bounds.max.x),
-                   _view.Bounds.max.y,
-                   Random.Range(_view.Bounds.min.z, _view.Bounds.max.z));
+            var ground = _view.Bounds;
+            var plane = new Plane(Vector3.up, new Vector3(0f, ground.max.y, 0f));
 
-            return position;
+            Vector3 ViewportToGround(float x, float y)
+            {
+                var ray = Camera.main.ViewportPointToRay(new Vector3(x, y, 0f));
+
+                if (!plane.Raycast(ray, out var distance))
+                {
+                    Debug.LogError("Location is not found");
+                }
+
+                return ray.GetPoint(distance);
+            }
+
+            var bottomLeft = ViewportToGround(0f, 0f);
+            var topRight = ViewportToGround(1f, 1f);
+
+            float minX = Mathf.Max(ground.min.x, bottomLeft.x);
+            float maxX = Mathf.Min(ground.max.x, topRight.x);
+            float minZ = Mathf.Max(ground.min.z, bottomLeft.z);
+            float maxZ = Mathf.Min(ground.max.z, topRight.z);
+
+            return new Vector3(Random.Range(minX, maxX), ground.max.y + 0.5f, Random.Range(minZ, maxZ));
         }
 
         public Quaternion GetSpawnRotatin()
@@ -83,7 +101,6 @@ namespace Gameplay.Game
         public async UniTask<Animal> SpawnAsync(Vector3 position, Quaternion rotation, CancellationToken cancellationToken)
         {
             var delay = Random.Range(_gameDefinition.MinSpawnnterval, _gameDefinition.MaxSpawnnterval);
-
             await UniTask.Delay(System.TimeSpan.FromSeconds(delay), cancellationToken: cancellationToken);
 
             var definition = GetDefiniton();
@@ -162,29 +179,23 @@ namespace Gameplay.Game
             if (first.Definition.Type == AnimalType.Prey && second.Definition.Type == AnimalType.Predator)
             {
                 _gameStatistics.RegisterPreyDeath();
-                Kill(first);
+                first.Kill();
                 second.Eat();
             }
 
             if (first.Definition.Type == AnimalType.Predator && second.Definition.Type == AnimalType.Prey)
             {
                 _gameStatistics.RegisterPreyDeath();
-                Kill(second);
+                second.Kill();
                 first.Eat();
             }
 
             if (first.Definition.Type == AnimalType.Predator && second.Definition.Type == AnimalType.Predator)
             {
                 _gameStatistics.RegisterPredatorDeath();
-                Kill(first);
+                first.Kill();
                 second.Eat();
             }
-        }
-
-        private void Kill(Animal animal)
-        {
-            _factory.Release(animal);
-            _animals.Remove(animal);
         }
     }
 }

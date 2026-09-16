@@ -6,7 +6,7 @@ namespace Gameplay.Definitions
     public class GameDefinition : ScriptableObject
     {
         public AnimalDefinition[] Animals;
-        public int MinSpawnnterval = 1;
-        public int MaxSpawnnterval = 2;
+        public float MinSpawnnterval = 1;
+        public float MaxSpawnnterval = 2;
     }
 }
