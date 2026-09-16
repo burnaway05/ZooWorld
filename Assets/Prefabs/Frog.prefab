@@ -154,3 +154,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnimalView
   _rigidbody: {fileID: 5148121256838794949}
+  _tastyLabel: {fileID: 0}
