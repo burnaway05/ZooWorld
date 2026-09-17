@@ -22,6 +22,7 @@ namespace Gameplay.Animals
     public class AnimalView : MonoBehaviour, IAnimalBody
     {
         private const float tastyOffset = 1.2f;
+        private const float tastyShowTime = 1f;
 
         [SerializeField]
         private Rigidbody _rigidbody;
@@ -81,7 +82,7 @@ namespace Gameplay.Animals
 
         private void LateUpdate()
         {
-            if(_tastyLabel != null)
+            if(_tastyLabel != null && _tastyLabel.activeSelf)
             {
                 Vector3 screenDown = -Camera.main.transform.up;
                 screenDown = Vector3.ProjectOnPlane(screenDown, Vector3.up).normalized;
@@ -100,7 +101,7 @@ namespace Gameplay.Animals
         {
             _tastyLabel?.SetActive(true);
 
-            await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);
+            await UniTask.Delay(TimeSpan.FromSeconds(tastyShowTime), cancellationToken: token);
 
             _tastyLabel?.SetActive(false);
         }
