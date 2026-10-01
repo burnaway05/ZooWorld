@@ -17,7 +17,7 @@ MonoBehaviour:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 1
+  m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
   m_DisableCatalogUpdateOnStart: 0
   m_InternalIdNamingMode: 0
@@ -52,13 +52,13 @@ MonoBehaviour:
   m_CheckForContentUpdateRestrictionsOption: 0
   m_MonoScriptBundleCustomNaming: 
   m_RemoteCatalogBuildPath:
-    m_Id: 47c52bed6065d1c46a7a111142e36a7e
+    m_Id: 
   m_RemoteCatalogLoadPath:
-    m_Id: 56fb02d83c30dce41b07c521a6fdfbb5
+    m_Id: 
   m_ContentStateBuildPathProfileVariableName: <default settings path>
   m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
-  m_BuildAddressablesWithPlayerBuild: 1
+  m_BuildAddressablesWithPlayerBuild: 2
   m_overridePlayerVersion: '[UnityEditor.PlayerSettings.bundleVersion]'
   m_GroupAssets:
   - {fileID: 11400000, guid: 922e2dcbd9ad9a44b9d0daaa8f0f892f, type: 2}
@@ -78,20 +78,6 @@ MonoBehaviour:
         m_Value: 'ServerData/[BuildTarget]'
       - m_Id: 56fb02d83c30dce41b07c521a6fdfbb5
         m_Value: <undefined>
-      - m_Id: bcf686498c8d6df448eac6109eea1d49
-        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
-      - m_Id: ed2005345a4e98a4e8503c790f0d0c57
-        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
-    - m_InheritedParent: 
-      m_Id: 269276fa275efde428498254aaee33a3
-      m_ProfileName: RemoteProfile
-      m_Values:
-      - m_Id: 1150a6cc36f81f748a6218817276d2da
-        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
-      - m_Id: 47c52bed6065d1c46a7a111142e36a7e
-        m_Value: 'ServerData/[BuildTarget]'
-      - m_Id: 56fb02d83c30dce41b07c521a6fdfbb5
-        m_Value: 'http://http://212.34.145.241//addressables/[BuildTarget]'
       - m_Id: bcf686498c8d6df448eac6109eea1d49
         m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
       - m_Id: ed2005345a4e98a4e8503c790f0d0c57
@@ -128,4 +114,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9a6b3d04c9e59fb45ad46d28431072f4, type: 2}
   - {fileID: 11400000, guid: aaf8d7d2ec6f79e4f90f73148cb3cd8e, type: 2}
   - {fileID: 11400000, guid: f1d945d3ee73a004ea23ec207276a41e, type: 2}
-  m_ActiveProfileId: 269276fa275efde428498254aaee33a3
+  m_ActiveProfileId: bf003cb90fca6d24cbe757cd85c52256
