@@ -7,10 +7,7 @@ public static class BuildScript
 {
     public static void BuildWindows()
     {
-        string[] scenes = EditorBuildSettings.scenes
-            .Where(scene => scene.enabled)
-            .Select(scene => scene.path)
-            .ToArray();
+        string[] scenes = GetScenes();
 
         var options = new BuildPlayerOptions
         {
@@ -33,5 +30,40 @@ public static class BuildScript
             Debug.LogError($"Build failed: {summary.result}");
             EditorApplication.Exit(1);
         }
+    }
+
+    public static void BuildAndroid()
+    {
+        string[] scenes = GetScenes();
+
+        var options = new BuildPlayerOptions
+        {
+            scenes = scenes,
+            locationPathName = "Build/Android/ZooWorld.apk",
+            target = BuildTarget.Android,
+            options = BuildOptions.None,
+        };
+
+        BuildReport report = BuildPipeline.BuildPlayer(options);
+        BuildSummary summary = report.summary;
+
+        if (summary.result == BuildResult.Succeeded)
+        {
+            Debug.Log($"Build succeeded: {summary.totalSize} bytes");
+            EditorApplication.Exit(0);
+        }
+        else
+        {
+            Debug.LogError($"Build failed: {summary.result}");
+            EditorApplication.Exit(1);
+        }
+    }
+
+    private static string[] GetScenes()
+    {
+        return EditorBuildSettings.scenes
+            .Where(scene => scene.enabled)
+            .Select(scene => scene.path)
+            .ToArray();
     }
 }
