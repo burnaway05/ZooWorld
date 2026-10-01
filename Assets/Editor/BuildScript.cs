@@ -1,4 +1,5 @@
 using UnityEditor.Build.Reporting;
+using UnityEditor.AddressableAssets.Settings;
 using UnityEditor;
 using System.Linq;
 using UnityEngine;
@@ -65,5 +66,18 @@ public static class BuildScript
             .Where(scene => scene.enabled)
             .Select(scene => scene.path)
             .ToArray();
+    }
+
+    public static void BuildAddressables()
+    {
+        AddressableAssetSettings.BuildPlayerContent(out var result);
+
+        if (!string.IsNullOrEmpty(result.Error))
+        {
+            Debug.LogError($"Addressables build failed: {result.Error}");
+            UnityEditor.EditorApplication.Exit(1);
+        }
+
+        Debug.Log("Addressables build succeeded");
     }
 }
