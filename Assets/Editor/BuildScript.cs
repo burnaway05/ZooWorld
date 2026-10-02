@@ -3,6 +3,7 @@ using UnityEditor.AddressableAssets.Settings;
 using UnityEditor;
 using System.Linq;
 using UnityEngine;
+using UnityEditor.AddressableAssets;
 
 public static class BuildScript
 {
@@ -20,7 +21,7 @@ public static class BuildScript
         BuildAddressables();
         BuildReport report = BuildPipeline.BuildPlayer(options);
         BuildSummary summary = report.summary;
-        
+
         if (summary.result == BuildResult.Succeeded)
         {
             Debug.Log($"Build succeeded: {summary.totalSize} bytes");
@@ -70,6 +71,11 @@ public static class BuildScript
 
     public static void BuildAddressables()
     {
+        var settings = AddressableAssetSettingsDefaultObject.Settings;
+
+        Debug.Log($"Active Addressables profile ID: {settings.activeProfileId}");
+        Debug.Log($"Active Addressables profile: " + $"{settings.profileSettings.GetProfileName(settings.activeProfileId)}");
+
         AddressableAssetSettings.BuildPlayerContent(out var result);
 
         if (!string.IsNullOrEmpty(result.Error))
