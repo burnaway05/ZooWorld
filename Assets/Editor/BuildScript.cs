@@ -17,7 +17,7 @@ public static class BuildScript
             target = BuildTarget.StandaloneWindows64,
             options = BuildOptions.None,
         };
-
+        BuildAddressables();
         BuildReport report = BuildPipeline.BuildPlayer(options);
         BuildSummary summary = report.summary;
         
