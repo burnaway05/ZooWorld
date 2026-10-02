@@ -4,14 +4,12 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace ZooWorld.Pooling
 {
     public class ObjectPool : IDisposable
     {
-        public static string Status;
-        private Transform _root;
+        private Transform _root; 
         private readonly HashSet<GameObject> _instances;
         private Dictionary<AssetReference, Queue<GameObject>> _pool;
 
@@ -59,46 +57,16 @@ namespace ZooWorld.Pooling
 
         private async UniTask<GameObject> CreateAsync(AssetReference reference, CancellationToken cancellationToken)
         {
-            var sizeHandle = Addressables.GetDownloadSizeAsync(reference.RuntimeKey);
-            await sizeHandle.Task;
-            if (sizeHandle.Status == AsyncOperationStatus.Succeeded)
-            {
-                Status += "'n" + $"[Addressables] Download size: {sizeHandle.Result / 1024f / 1024f:F2} MB";
-                Debug.Log($"[Addressables] Download size: {sizeHandle.Result / 1024f / 1024f:F2} MB");
-            }
-            else
-            {
-                Status += "'n" + $"[Addressables] Couldn't get download size: {sizeHandle.OperationException}";
-                Debug.LogError($"[Addressables] Couldn't get download size: {sizeHandle.OperationException}");
-            }
-
-            Addressables.Release(sizeHandle);
-
-            var handle = Addressables.InstantiateAsync(reference, GetRoot(), false, true);
-
-            await handle.Task;
-
-            if (handle.Status == AsyncOperationStatus.Succeeded)
-            {
-                Status += "'n" + $"[Addressables] SUCCESS: {reference.RuntimeKey}";
-                Debug.Log($"[Addressables] SUCCESS: {reference.RuntimeKey}");
-            }
-            else
-            {
-                Status += "'n" + $"[Addressables] FAILED: {reference.RuntimeKey}\n" + $"{handle.OperationException}";
-                Debug.LogError($"[Addressables] FAILED: {reference.RuntimeKey}\n" + $"{handle.OperationException}");
-            }
-
-            var gameObject = 
-            _instances.Add(handle.Result);
+            var gameObject = await Addressables.InstantiateAsync(reference, GetRoot(), false, true);
+            _instances.Add(gameObject);
 
             if (cancellationToken.IsCancellationRequested)
             {
-                Addressables.ReleaseInstance(handle.Result);
+                Addressables.ReleaseInstance(gameObject);
                 cancellationToken.ThrowIfCancellationRequested();
             }
 
-            return handle.Result;
+            return gameObject;
         }
 
         public async UniTask WarmUpAsync(AssetReference reference, int count, CancellationToken cancellationToken)
