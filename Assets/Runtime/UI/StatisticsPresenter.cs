@@ -2,7 +2,7 @@ using Gameplay.Game;
 using System;
 using VContainer.Unity;
 
-namespace UI
+namespace ZooWorld.UI
 {
     public class StatisticsPresenter : IStartable, IDisposable
     {

@@ -10,6 +10,7 @@ namespace ZooWorld.Pooling
 {
     public class ObjectPool : IDisposable
     {
+        public static string Status;
         private Transform _root;
         private readonly HashSet<GameObject> _instances;
         private Dictionary<AssetReference, Queue<GameObject>> _pool;
@@ -58,15 +59,16 @@ namespace ZooWorld.Pooling
 
         private async UniTask<GameObject> CreateAsync(AssetReference reference, CancellationToken cancellationToken)
         {
-            Debug.Log($"[Addressables] Start loading: {reference.RuntimeKey}");
             var sizeHandle = Addressables.GetDownloadSizeAsync(reference.RuntimeKey);
             await sizeHandle.Task;
             if (sizeHandle.Status == AsyncOperationStatus.Succeeded)
             {
+                Status += "'n" + $"[Addressables] Download size: {sizeHandle.Result / 1024f / 1024f:F2} MB";
                 Debug.Log($"[Addressables] Download size: {sizeHandle.Result / 1024f / 1024f:F2} MB");
             }
             else
             {
+                Status += "'n" + $"[Addressables] Couldn't get download size: {sizeHandle.OperationException}";
                 Debug.LogError($"[Addressables] Couldn't get download size: {sizeHandle.OperationException}");
             }
 
@@ -78,10 +80,12 @@ namespace ZooWorld.Pooling
 
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
+                Status += "'n" + $"[Addressables] SUCCESS: {reference.RuntimeKey}";
                 Debug.Log($"[Addressables] SUCCESS: {reference.RuntimeKey}");
             }
             else
             {
+                Status += "'n" + $"[Addressables] FAILED: {reference.RuntimeKey}\n" + $"{handle.OperationException}";
                 Debug.LogError($"[Addressables] FAILED: {reference.RuntimeKey}\n" + $"{handle.OperationException}");
             }
 

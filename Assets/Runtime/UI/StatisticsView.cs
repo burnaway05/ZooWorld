@@ -1,7 +1,8 @@
 using TMPro;
 using UnityEngine;
+using ZooWorld.Pooling;
 
-namespace UI
+namespace ZooWorld.UI
 {
     public class StatisticsView : MonoBehaviour
     {
@@ -11,6 +12,9 @@ namespace UI
         [SerializeField]
         private TMP_Text _deadPredatorsText;
 
+        [SerializeField]
+        private TMP_Text _status;
+
         public void SetDeadPrey(int value)
         {
             _deadPreyText.text = $"Dead prey: {value}";
@@ -19,6 +23,16 @@ namespace UI
         public void SetDeadPredators(int value)
         {
             _deadPredatorsText.text = $"Dead predators: {value}";
+        }
+
+        public void SetStatus(string message)
+        {
+            _status.text += "\n" + message;
+        }
+
+        private void Update()
+        {
+            _status.text = ObjectPool.Status;
         }
     }
 }

@@ -1,7 +1,7 @@
 using Gameplay.Animals;
 using Gameplay.Definitions;
 using Gameplay.Game;
-using UI;
+using ZooWorld.UI;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
