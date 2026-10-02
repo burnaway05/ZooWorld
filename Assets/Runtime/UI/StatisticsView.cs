@@ -24,15 +24,5 @@ namespace ZooWorld.UI
         {
             _deadPredatorsText.text = $"Dead predators: {value}";
         }
-
-        public void SetStatus(string message)
-        {
-            _status.text += "\n" + message;
-        }
-
-        private void Update()
-        {
-            _status.text = ObjectPool.Status;
-        }
     }
 }
