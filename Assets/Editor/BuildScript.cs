@@ -85,5 +85,7 @@ public static class BuildScript
         }
 
         Debug.Log("Addressables build succeeded");
+
+        EditorApplication.Exit(0);
     }
 }
