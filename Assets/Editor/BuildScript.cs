@@ -10,6 +10,16 @@ public static class BuildScript
 {
     public static void BuildWindows()
     {
+        AddressableAssetSettings.BuildPlayerContent(out var addressablesResult);
+
+        if (!string.IsNullOrEmpty(addressablesResult.Error))
+        {
+            Debug.LogError($"Addressables build failed: {addressablesResult.Error}");
+
+            EditorApplication.Exit(1);
+            return;
+        }
+
         string[] scenes = GetScenes();
 
         var options = new BuildPlayerOptions
@@ -19,7 +29,7 @@ public static class BuildScript
             target = BuildTarget.StandaloneWindows64,
             options = BuildOptions.None,
         };
-        BuildAddressables();
+
         BuildReport report = BuildPipeline.BuildPlayer(options);
         BuildSummary summary = report.summary;
 
