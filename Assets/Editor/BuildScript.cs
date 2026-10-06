@@ -1,5 +1,6 @@
 using UnityEditor.Build.Reporting;
 using UnityEditor.AddressableAssets.Settings;
+using UnityEditor.AddressableAssets.Build;
 using UnityEditor;
 using System.Linq;
 using UnityEngine;
@@ -86,6 +87,32 @@ public static class BuildScript
 
         Debug.Log("Addressables build succeeded");
 
+        EditorApplication.Exit(0);
+    }
+
+    public static void BuildAddressablesUpdate()
+    {
+        string statePath = System.IO.Path.Combine(System.Environment.CurrentDirectory, "ContentState", "addressables_content_state.bin");
+
+        Debug.Log($"[Addressables] Content update using: {statePath}");
+
+        if (!System.IO.File.Exists(statePath))
+        {
+            Debug.LogError($"State file not found: {statePath}");
+            EditorApplication.Exit(1);
+            return;
+        }
+
+        var result = ContentUpdateScript.BuildContentUpdate(AddressableAssetSettingsDefaultObject.Settings, statePath);
+
+        if (!string.IsNullOrEmpty(result.Error))
+        {
+            Debug.LogError($"[Addressables] Content update failed: {result.Error}");
+            EditorApplication.Exit(1);
+            return;
+        }
+
+        Debug.Log("[Addressables] Content update succeeded");
         EditorApplication.Exit(0);
     }
 }
