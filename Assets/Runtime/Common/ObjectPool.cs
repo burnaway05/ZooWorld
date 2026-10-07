@@ -71,6 +71,13 @@ namespace ZooWorld.Pooling
 
         public async UniTask WarmUpAsync(AssetReference reference, int count, CancellationToken cancellationToken)
         {
+            var handle = Addressables.GetDownloadSizeAsync(reference.RuntimeKey);
+            await handle.Task;
+
+            Debug.Log($"Need to download: {handle.Result} bytes");
+
+            Addressables.Release(handle);
+
             var pool = GetOrAddPool(reference);
 
             while (pool.Count < count)
