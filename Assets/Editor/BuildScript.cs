@@ -8,7 +8,7 @@ using UnityEditor.AddressableAssets;
 
 public static class BuildScript
 {
-    public static void BuildWindows()
+    public static void BuildWindowsAndResources()
     {
         AddressableAssetSettings.BuildPlayerContent(out var addressablesResult);
 
@@ -20,6 +20,33 @@ public static class BuildScript
             return;
         }
 
+        string[] scenes = GetScenes();
+
+        var options = new BuildPlayerOptions
+        {
+            scenes = scenes,
+            locationPathName = "Build/Windows/ZooWorld.exe",
+            target = BuildTarget.StandaloneWindows64,
+            options = BuildOptions.None,
+        };
+
+        BuildReport report = BuildPipeline.BuildPlayer(options);
+        BuildSummary summary = report.summary;
+
+        if (summary.result == BuildResult.Succeeded)
+        {
+            Debug.Log($"Build succeeded: {summary.totalSize} bytes");
+            EditorApplication.Exit(0);
+        }
+        else
+        {
+            Debug.LogError($"Build failed: {summary.result}");
+            EditorApplication.Exit(1);
+        }
+    }
+
+    public static void BuildWindows()
+    {
         string[] scenes = GetScenes();
 
         var options = new BuildPlayerOptions
